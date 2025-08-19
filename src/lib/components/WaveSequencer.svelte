@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { Volume2, VolumeX, ZoomIn, ZoomOut } from 'lucide-svelte';
 
-	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
+	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 	let zoom = 1;
 	let containerEl: HTMLDivElement;
 	let scrollPosition = 0;
@@ -33,7 +33,7 @@
 	}
 
 	$: stepWidth = 60 * zoom;
-	$: trackHeight = 60;
+	$: trackHeight = 50;
 
 	// Auto-scroll to current step when playing
 	$: if ($isPlaying && containerEl) {
@@ -62,7 +62,7 @@
 		<div class="wave-sequencer-wrapper">
 			<div class="track-headers">
 				{#each $currentPattern.tracks as track, trackIndex}
-					<div class="track-header" style="--track-color: {trackColors[trackIndex]}">
+					<div class="track-header" style="--track-color: {trackColors[trackIndex % trackColors.length]}">
 						<div class="track-info">
 							<div class="track-indicator"></div>
 							<span class="track-name">{track.name}</span>
@@ -129,7 +129,7 @@
 									style="
 										left: {stepIndex * stepWidth}px;
 										width: {stepWidth - 4}px;
-										background: {step.active ? trackColors[trackIndex] : 'transparent'};
+										background: {step.active ? trackColors[trackIndex % trackColors.length] : 'transparent'};
 									"
 									aria-label="Step {stepIndex + 1}"
 								>
@@ -214,7 +214,7 @@
 	}
 
 	.track-header {
-		height: 60px;
+		height: 50px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -287,7 +287,7 @@
 	.wave-grid {
 		position: relative;
 		height: 100%;
-		min-height: 240px;
+		min-height: 350px;
 	}
 
 	.grid-lines {
@@ -332,14 +332,14 @@
 
 	.wave-track {
 		position: absolute;
-		height: 60px;
+		height: 50px;
 		width: 100%;
 		border-bottom: 1px solid #2a2a2a;
 	}
 
 	.wave-step {
 		position: absolute;
-		height: 56px;
+		height: 46px;
 		top: 2px;
 		border: 1px solid #3a3a3a;
 		border-radius: 0.25rem;

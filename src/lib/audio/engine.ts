@@ -141,6 +141,18 @@ export class AudioEngine {
 		}
 	}
 
+	setGlobalReverb(amount: number) {
+		if (this.drumKit) {
+			this.drumKit.setGlobalReverbMix(amount);
+		}
+	}
+
+	setGlobalReverbDecay(seconds: number) {
+		if (this.drumKit) {
+			this.drumKit.setGlobalReverbDecay(seconds);
+		}
+	}
+
 	toggleStep(trackIndex: number, stepIndex: number) {
 		if (!this.pattern) return;
 

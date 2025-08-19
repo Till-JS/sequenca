@@ -5,6 +5,7 @@
 	import PatternSelector from '$lib/components/controls/PatternSelector.svelte';
 	import SwingControl from '$lib/components/controls/SwingControl.svelte';
 	import ClearButton from '$lib/components/controls/ClearButton.svelte';
+	import ReverbControl from '$lib/components/controls/ReverbControl.svelte';
 	import ShareButton from '$lib/components/shared/ShareButton.svelte';
 	import ViewSwitcher from '$lib/components/shared/ViewSwitcher.svelte';
 	import { sequencer, isPlaying } from '$lib/stores/sequencer';
@@ -81,6 +82,7 @@
 			<SwingControl />
 			<div class="divider"></div>
 			<VolumeControl />
+			<ReverbControl />
 			<div class="divider"></div>
 			<ClearButton />
 			<ShareButton />

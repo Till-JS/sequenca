@@ -9,7 +9,10 @@ function createInitialPattern(): Pattern {
 		InstrumentType.KICK,
 		InstrumentType.SNARE,
 		InstrumentType.HIHAT,
-		InstrumentType.OPENHAT
+		InstrumentType.OPENHAT,
+		InstrumentType.BASS,
+		InstrumentType.CLAP,
+		InstrumentType.PERC
 	];
 
 	const tracks: Track[] = instruments.map((instrument, index) => {
@@ -310,6 +313,14 @@ function createSequencerStore() {
 		});
 	}
 
+	function setGlobalReverb(amount: number) {
+		audioEngine.setGlobalReverb(amount);
+	}
+
+	function setGlobalReverbDecay(seconds: number) {
+		audioEngine.setGlobalReverbDecay(seconds);
+	}
+
 	return {
 		subscribe,
 		init,
@@ -329,7 +340,9 @@ function createSequencerStore() {
 		createNewPattern,
 		duplicatePattern,
 		deletePattern,
-		renamePattern
+		renamePattern,
+		setGlobalReverb,
+		setGlobalReverbDecay
 	};
 }
 

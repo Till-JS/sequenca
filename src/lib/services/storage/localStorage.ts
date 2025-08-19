@@ -104,7 +104,11 @@ export class LocalStorageService {
 						'kick': 'kick',
 						'snare': 'snare',
 						'hihat': 'hihat',
-						'openhat': 'openhat'
+						'openhat': 'openhat',
+						'bass': 'bass',
+						'clap': 'clap',
+						'perc': 'perc',
+						'synth': 'synth'
 					};
 					return {
 						...track,

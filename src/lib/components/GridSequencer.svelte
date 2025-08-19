@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { Volume2, VolumeX } from 'lucide-svelte';
 
-	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
+	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 
 	onMount(() => {
 		sequencer.init();

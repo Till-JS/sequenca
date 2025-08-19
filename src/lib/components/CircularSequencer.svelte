@@ -3,11 +3,11 @@
 	import { onMount } from 'svelte';
 	import { Volume2, VolumeX } from 'lucide-svelte';
 
-	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
+	const trackColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 	const centerX = 250;
 	const centerY = 250;
-	const radiusStep = 40;
-	const baseRadius = 80;
+	const radiusStep = 30;
+	const baseRadius = 60;
 
 	onMount(() => {
 		sequencer.init();
@@ -73,8 +73,8 @@
 					<circle
 						cx={pos.x}
 						cy={pos.y}
-						r="12"
-						fill={step.active ? trackColors[trackIndex] : '#2a2a2a'}
+						r="10"
+						fill={step.active ? trackColors[trackIndex % trackColors.length] : '#2a2a2a'}
 						stroke={$currentStep === stepIndex && $isPlaying ? 'white' : '#3a3a3a'}
 						stroke-width={$currentStep === stepIndex && $isPlaying ? '2' : '1'}
 						opacity={step.active ? 0.9 : 1}
@@ -110,7 +110,7 @@
 		<!-- Track controls -->
 		<div class="track-controls">
 			{#each $currentPattern.tracks as track, trackIndex}
-				<div class="track-control" style="--track-color: {trackColors[trackIndex]}">
+				<div class="track-control" style="--track-color: {trackColors[trackIndex % trackColors.length]}">
 					<div class="track-indicator"></div>
 					<span class="track-name">{track.name}</span>
 					<button
