@@ -153,6 +153,24 @@ export class AudioEngine {
 		}
 	}
 
+	setGlobalDelay(amount: number) {
+		if (this.drumKit) {
+			this.drumKit.setGlobalDelayMix(amount);
+		}
+	}
+
+	setGlobalDelayTime(time: string | number) {
+		if (this.drumKit) {
+			this.drumKit.setGlobalDelayTime(time);
+		}
+	}
+
+	setGlobalDelayFeedback(feedback: number) {
+		if (this.drumKit) {
+			this.drumKit.setGlobalDelayFeedback(feedback);
+		}
+	}
+
 	toggleStep(trackIndex: number, stepIndex: number) {
 		if (!this.pattern) return;
 

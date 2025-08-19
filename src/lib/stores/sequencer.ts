@@ -321,6 +321,18 @@ function createSequencerStore() {
 		audioEngine.setGlobalReverbDecay(seconds);
 	}
 
+	function setGlobalDelay(amount: number) {
+		audioEngine.setGlobalDelay(amount);
+	}
+
+	function setGlobalDelayTime(time: string | number) {
+		audioEngine.setGlobalDelayTime(time);
+	}
+
+	function setGlobalDelayFeedback(feedback: number) {
+		audioEngine.setGlobalDelayFeedback(feedback);
+	}
+
 	return {
 		subscribe,
 		init,
@@ -342,7 +354,10 @@ function createSequencerStore() {
 		deletePattern,
 		renamePattern,
 		setGlobalReverb,
-		setGlobalReverbDecay
+		setGlobalReverbDecay,
+		setGlobalDelay,
+		setGlobalDelayTime,
+		setGlobalDelayFeedback
 	};
 }
 

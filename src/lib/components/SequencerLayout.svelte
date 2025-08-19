@@ -6,6 +6,7 @@
 	import SwingControl from '$lib/components/controls/SwingControl.svelte';
 	import ClearButton from '$lib/components/controls/ClearButton.svelte';
 	import ReverbControl from '$lib/components/controls/ReverbControl.svelte';
+	import DelayControl from '$lib/components/controls/DelayControl.svelte';
 	import ShareButton from '$lib/components/shared/ShareButton.svelte';
 	import ViewSwitcher from '$lib/components/shared/ViewSwitcher.svelte';
 	import { sequencer, isPlaying } from '$lib/stores/sequencer';
@@ -82,7 +83,9 @@
 			<SwingControl />
 			<div class="divider"></div>
 			<VolumeControl />
+			<div class="divider"></div>
 			<ReverbControl />
+			<DelayControl />
 			<div class="divider"></div>
 			<ClearButton />
 			<ShareButton />

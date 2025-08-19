@@ -118,10 +118,10 @@ export class SendEffects {
 		// Create send delay
 		this.delaySend = new Tone.FeedbackDelay({
 			delayTime: '8n',
-			feedback: 0.5,
+			feedback: 0.3,
 			wet: 1 // 100% wet for send effect
 		});
-		this.delayReturn = new Tone.Gain(0.3).toDestination();
+		this.delayReturn = new Tone.Gain(0.2).toDestination();
 		this.delaySend.connect(this.delayReturn);
 	}
 
