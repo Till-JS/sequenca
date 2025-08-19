@@ -22,7 +22,7 @@
 		min="0"
 		max="100"
 		bind:value={localVolume}
-		on:input={handleVolumeChange}
+		oninput={handleVolumeChange}
 		class="w-24 accent-primary"
 		aria-label="Master Volume"
 	/>

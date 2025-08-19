@@ -56,6 +56,7 @@
 						{#each track.steps as step, stepIndex}
 							<button
 								onclick={() => handleStepClick(trackIndex, stepIndex)}
+								ontouchstart={(e) => { e.preventDefault(); handleStepClick(trackIndex, stepIndex); }}
 								class="step"
 								class:active={step.active}
 								class:current={$currentStep === stepIndex && $isPlaying}
@@ -216,5 +217,49 @@
 	.step-number.current {
 		color: #fff;
 		font-weight: bold;
+	}
+
+	/* Mobile Responsive */
+	@media (max-width: 768px) {
+		.grid-sequencer {
+			padding: 0.5rem;
+		}
+
+		.track-header {
+			min-width: 80px;
+		}
+
+		.track-name {
+			font-size: 0.75rem;
+		}
+
+		.step {
+			width: 2rem;
+			height: 2rem;
+		}
+
+		.step-number {
+			width: 2rem;
+			font-size: 0.625rem;
+		}
+
+		.step-numbers {
+			margin-left: 88px;
+		}
+
+		.mute-btn,
+		.solo-btn {
+			width: 1.5rem;
+			height: 1.5rem;
+			font-size: 0.625rem;
+		}
+	}
+
+	/* Prevent text selection on mobile */
+	.step {
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 </style>

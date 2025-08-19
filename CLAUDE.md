@@ -63,7 +63,12 @@ To add new translations:
   - Located in `e2e/` directory
 
 ### Key Patterns
-- All Svelte components use the new Svelte 5 syntax
+- **IMPORTANT: Always use Svelte 5 syntax:**
+  - Event handlers: `onclick`, `oninput`, `onkeydown` (NOT `on:click`, `on:input`, etc.)
+  - Props: `$props()` syntax (NOT `export let`)
+  - State: `$state()` rune for reactive state
+  - Effects: `$effect()` instead of `$:`
+  - Snippets: `{@render}` for rendering snippets
 - TypeScript is used throughout (`.svelte` files have `lang="ts"` in script tags)
 - TailwindCSS classes for styling (configured in `tailwind.config.js`)
 - Paraglide messages are type-safe and tree-shakeable

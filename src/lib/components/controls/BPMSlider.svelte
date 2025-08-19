@@ -25,7 +25,7 @@
 		min={AUDIO_CONSTANTS.MIN_BPM}
 		max={AUDIO_CONSTANTS.MAX_BPM}
 		bind:value={localBpm}
-		on:input={handleBpmChange}
+		oninput={handleBpmChange}
 		class="w-32 accent-primary"
 	/>
 </div>

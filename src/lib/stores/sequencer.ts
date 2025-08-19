@@ -1,6 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import { AudioEngine } from '$lib/audio/engine';
 import { AUDIO_CONSTANTS } from '$lib/audio/constants';
+import { storage } from '$lib/services/storage/localStorage';
 import type { Pattern, Track, Step, InstrumentType, SequencerState } from '$lib/types/sequencer';
 
 function createInitialPattern(): Pattern {
@@ -44,12 +45,21 @@ function createSequencerStore() {
 	const audioEngine = new AudioEngine();
 	let initialized = false;
 
+	// Load saved patterns or create initial
+	const savedPatterns = storage.loadPatterns();
+	const savedCurrentId = storage.getCurrentPatternId();
+	
+	let patterns = savedPatterns.length > 0 ? savedPatterns : [createInitialPattern()];
+	let currentPattern = savedCurrentId 
+		? patterns.find(p => p.id === savedCurrentId) || patterns[0]
+		: patterns[0];
+
 	const initialState: SequencerState = {
 		isPlaying: false,
 		currentStep: 0,
-		bpm: AUDIO_CONSTANTS.DEFAULT_BPM,
-		currentPattern: createInitialPattern(),
-		patterns: [createInitialPattern()],
+		bpm: currentPattern?.bpm || AUDIO_CONSTANTS.DEFAULT_BPM,
+		currentPattern,
+		patterns,
 		masterVolume: AUDIO_CONSTANTS.DEFAULT_VOLUME,
 		metronome: false,
 		selectedTrack: null,
@@ -187,6 +197,106 @@ function createSequencerStore() {
 		update((state) => ({ ...state, swing }));
 	}
 
+	function savePattern(pattern?: Pattern): boolean {
+		const state = get({ subscribe });
+		const patternToSave = pattern || state.currentPattern;
+		if (!patternToSave) return false;
+		
+		const success = storage.savePattern(patternToSave);
+		if (success) {
+			update((state) => {
+				const existingIndex = state.patterns.findIndex(p => p.id === patternToSave.id);
+				if (existingIndex >= 0) {
+					state.patterns[existingIndex] = patternToSave;
+				} else {
+					state.patterns.push(patternToSave);
+				}
+				return state;
+			});
+		}
+		return success;
+	}
+
+	function loadPattern(patternId: string): void {
+		update((state) => {
+			const pattern = state.patterns.find(p => p.id === patternId);
+			if (pattern) {
+				audioEngine.stop();
+				audioEngine.setPattern(pattern);
+				storage.saveCurrentPatternId(patternId);
+				return { 
+					...state, 
+					currentPattern: pattern,
+					currentStep: 0,
+					isPlaying: false,
+					bpm: pattern.bpm
+				};
+			}
+			return state;
+		});
+	}
+
+	function createNewPattern(name?: string): void {
+		const newPattern = createInitialPattern();
+		newPattern.id = `pattern-${Date.now()}`;
+		newPattern.name = name || `Pattern ${get({ subscribe }).patterns.length + 1}`;
+		
+		savePattern(newPattern);
+		loadPattern(newPattern.id);
+	}
+
+	function duplicatePattern(patternId: string): void {
+		const state = get({ subscribe });
+		const pattern = state.patterns.find(p => p.id === patternId);
+		if (!pattern) return;
+
+		const duplicate = {
+			...pattern,
+			id: `pattern-${Date.now()}`,
+			name: `${pattern.name} (Copy)`,
+			created: new Date(),
+			modified: new Date()
+		};
+
+		savePattern(duplicate);
+		loadPattern(duplicate.id);
+	}
+
+	function deletePattern(patternId: string): void {
+		const state = get({ subscribe });
+		if (state.patterns.length <= 1) return; // Keep at least one pattern
+
+		storage.deletePattern(patternId);
+		update((state) => {
+			const filtered = state.patterns.filter(p => p.id !== patternId);
+			if (state.currentPattern?.id === patternId) {
+				const newCurrent = filtered[0];
+				audioEngine.setPattern(newCurrent);
+				storage.saveCurrentPatternId(newCurrent.id);
+				return { 
+					...state, 
+					patterns: filtered,
+					currentPattern: newCurrent,
+					currentStep: 0,
+					isPlaying: false
+				};
+			}
+			return { ...state, patterns: filtered };
+		});
+	}
+
+	function renamePattern(patternId: string, newName: string): void {
+		update((state) => {
+			const pattern = state.patterns.find(p => p.id === patternId);
+			if (pattern) {
+				pattern.name = newName;
+				pattern.modified = new Date();
+				storage.savePattern(pattern);
+			}
+			return state;
+		});
+	}
+
 	return {
 		subscribe,
 		init,
@@ -200,7 +310,13 @@ function createSequencerStore() {
 		toggleTrackMute,
 		toggleTrackSolo,
 		clearPattern,
-		setSwing
+		setSwing,
+		savePattern,
+		loadPattern,
+		createNewPattern,
+		duplicatePattern,
+		deletePattern,
+		renamePattern
 	};
 }
 
