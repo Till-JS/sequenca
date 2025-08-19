@@ -33,7 +33,8 @@
 		sequencer.toggleTrackSolo(trackIndex);
 	}
 
-	$: playheadAngle = ($currentStep / 16) * 360 - 90;
+	// Korrigierte Winkelberechnung für die Playhead-Linie
+	$: playheadAngle = ($currentStep / 16) * 360;
 </script>
 
 {#if $currentPattern}
@@ -53,15 +54,18 @@
 
 			<!-- Playhead -->
 			{#if $isPlaying}
+				{@const outerRadius = baseRadius + ($currentPattern.tracks.length - 1) * radiusStep + 20}
+				{@const angle = (($currentStep / 16) * Math.PI * 2) - Math.PI / 2}
+				{@const x2 = centerX + Math.cos(angle) * outerRadius}
+				{@const y2 = centerY + Math.sin(angle) * outerRadius}
 				<line
 					x1={centerX}
 					y1={centerY}
-					x2={centerX}
-					y2="50"
+					x2={x2}
+					y2={y2}
 					stroke="white"
 					stroke-width="2"
-					opacity="0.5"
-					transform="rotate({playheadAngle} {centerX} {centerY})"
+					opacity="0.6"
 					class="playhead"
 				/>
 			{/if}
