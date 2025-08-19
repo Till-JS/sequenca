@@ -2,19 +2,31 @@ import { writable, derived, get } from 'svelte/store';
 import { AudioEngine } from '$lib/audio/engine';
 import { AUDIO_CONSTANTS } from '$lib/audio/constants';
 import { storage } from '$lib/services/storage/localStorage';
-import type { Pattern, Track, Step, InstrumentType, SequencerState } from '$lib/types/sequencer';
+import { InstrumentType, type Pattern, type Track, type Step, type SequencerState } from '$lib/types/sequencer';
 
 function createInitialPattern(): Pattern {
 	const instruments: InstrumentType[] = [
-		'kick' as InstrumentType,
-		'snare' as InstrumentType,
-		'hihat' as InstrumentType,
-		'openhat' as InstrumentType
+		InstrumentType.KICK,
+		InstrumentType.SNARE,
+		InstrumentType.HIHAT,
+		InstrumentType.OPENHAT
 	];
 
-	const tracks: Track[] = instruments.map((instrument, index) => ({
+	const tracks: Track[] = instruments.map((instrument, index) => {
+		const nameMap: Record<InstrumentType, string> = {
+			[InstrumentType.KICK]: 'Kick',
+			[InstrumentType.SNARE]: 'Snare',
+			[InstrumentType.HIHAT]: 'HiHat',
+			[InstrumentType.OPENHAT]: 'OpenHat',
+			[InstrumentType.CLAP]: 'Clap',
+			[InstrumentType.PERC]: 'Perc',
+			[InstrumentType.SYNTH]: 'Synth',
+			[InstrumentType.BASS]: 'Bass'
+		};
+		
+		return {
 		id: `track-${index}`,
-		name: instrument.charAt(0).toUpperCase() + instrument.slice(1),
+		name: nameMap[instrument] || instrument,
 		instrument,
 		steps: Array(16)
 			.fill(null)
@@ -28,7 +40,8 @@ function createInitialPattern(): Pattern {
 		effects: [],
 		muted: false,
 		solo: false
-	}));
+	};
+	});
 
 	return {
 		id: 'pattern-1',

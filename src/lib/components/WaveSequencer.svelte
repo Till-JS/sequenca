@@ -151,10 +151,13 @@
 <style>
 	.wave-container {
 		width: 100%;
-		max-width: 1200px;
+		height: 100%;
+		max-height: 500px;
 		background: #1a1a1a;
 		border-radius: 0.75rem;
 		padding: 1rem;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.zoom-controls {
@@ -199,6 +202,8 @@
 		border-radius: 0.5rem;
 		overflow: hidden;
 		border: 1px solid #2a2a2a;
+		flex: 1;
+		min-height: 0;
 	}
 
 	.track-headers {
@@ -281,7 +286,8 @@
 
 	.wave-grid {
 		position: relative;
-		height: 240px;
+		height: 100%;
+		min-height: 240px;
 	}
 
 	.grid-lines {

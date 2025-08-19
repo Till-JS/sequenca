@@ -98,10 +98,19 @@ export class LocalStorageService {
 
 			return patterns.map((p) => ({
 				...p,
-				tracks: p.tracks.map((track) => ({
-					...track,
-					instrument: track.instrument as any
-				}))
+				tracks: p.tracks.map((track) => {
+					// Konvertiere String zu InstrumentType enum
+					const instrumentMap: Record<string, any> = {
+						'kick': 'kick',
+						'snare': 'snare',
+						'hihat': 'hihat',
+						'openhat': 'openhat'
+					};
+					return {
+						...track,
+						instrument: instrumentMap[track.instrument] || track.instrument
+					};
+				})
 			}));
 		} catch (error) {
 			console.error('Failed to load patterns:', error);

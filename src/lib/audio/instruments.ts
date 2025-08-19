@@ -1,14 +1,20 @@
 import * as Tone from 'tone';
 import { DRUM_URLS } from './constants';
-import type { InstrumentType } from '$lib/types/sequencer';
+import { InstrumentType } from '$lib/types/sequencer';
 
 export class DrumKit {
-	private synths: Map<InstrumentType, Tone.MembraneSynth | Tone.NoiseSynth | Tone.MetalSynth> =
-		new Map();
+	private synths: Map<InstrumentType, any> = new Map();
 	private loaded = false;
 
 	async load() {
 		if (this.loaded) return;
+
+		console.log('Loading instruments with enum values:', {
+			KICK: InstrumentType.KICK,
+			SNARE: InstrumentType.SNARE,
+			HIHAT: InstrumentType.HIHAT,
+			OPENHAT: InstrumentType.OPENHAT
+		});
 
 		const kick = new Tone.MembraneSynth({
 			pitchDecay: 0.05,
@@ -36,50 +42,60 @@ export class DrumKit {
 			}
 		}).toDestination();
 
-		const hihat = new Tone.MetalSynth({
-			frequency: 200,
+		// HiHat mit NoiseSynth und Filter
+		const hihatFilter = new Tone.Filter(10000, 'highpass').toDestination();
+		const hihat = new Tone.NoiseSynth({
+			noise: {
+				type: 'white'
+			},
 			envelope: {
 				attack: 0.001,
-				decay: 0.1,
+				decay: 0.03,
+				sustain: 0,
 				release: 0.01
 			},
-			harmonicity: 5.1,
-			modulationIndex: 32,
-			resonance: 4000,
-			octaves: 1.5
-		}).toDestination();
+			volume: -5
+		}).connect(hihatFilter);
 
-		const openhat = new Tone.MetalSynth({
-			frequency: 200,
+		// Open HiHat mit längerem Decay
+		const openhatFilter = new Tone.Filter(8000, 'highpass').toDestination();
+		const openhat = new Tone.NoiseSynth({
+			noise: {
+				type: 'white'
+			},
 			envelope: {
 				attack: 0.001,
-				decay: 0.5,
+				decay: 0.15,
+				sustain: 0.1,
 				release: 0.2
 			},
-			harmonicity: 5.1,
-			modulationIndex: 32,
-			resonance: 4000,
-			octaves: 1.5
-		}).toDestination();
+			volume: -5
+		}).connect(openhatFilter);
 
-		this.synths.set('kick' as InstrumentType, kick);
-		this.synths.set('snare' as InstrumentType, snare);
-		this.synths.set('hihat' as InstrumentType, hihat);
-		this.synths.set('openhat' as InstrumentType, openhat);
+		this.synths.set(InstrumentType.KICK, kick);
+		this.synths.set(InstrumentType.SNARE, snare);
+		this.synths.set(InstrumentType.HIHAT, hihat);
+		this.synths.set(InstrumentType.OPENHAT, openhat);
+
+		console.log('Loaded synths with keys:', Array.from(this.synths.keys()));
 
 		this.loaded = true;
 	}
 
 	trigger(instrument: InstrumentType, velocity = 1, time?: number) {
+		console.log('Triggering instrument:', instrument, 'at time:', time);
 		const synth = this.synths.get(instrument);
-		if (!synth) return;
+		
+		if (!synth) {
+			console.error('Synth not found for instrument:', instrument);
+			console.log('Available synths:', Array.from(this.synths.keys()));
+			return;
+		}
 
-		if (instrument === 'kick') {
+		if (instrument === InstrumentType.KICK) {
 			(synth as Tone.MembraneSynth).triggerAttackRelease('C1', '8n', time, velocity);
-		} else if (instrument === 'snare') {
-			(synth as Tone.NoiseSynth).triggerAttackRelease('8n', time, velocity);
-		} else if (instrument === 'hihat' || instrument === 'openhat') {
-			(synth as Tone.MetalSynth).triggerAttackRelease('16n', time, velocity * 0.3);
+		} else if (instrument === InstrumentType.SNARE || instrument === InstrumentType.HIHAT || instrument === InstrumentType.OPENHAT) {
+			(synth as Tone.NoiseSynth).triggerAttackRelease('16n', time, velocity);
 		}
 	}
 

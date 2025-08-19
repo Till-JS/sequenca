@@ -23,8 +23,9 @@
 </script>
 
 {#if $currentPattern}
-	<div class="grid-sequencer">
-		<div class="tracks-container">
+	<div class="grid-wrapper">
+		<div class="grid-sequencer">
+			<div class="tracks-container">
 			{#each $currentPattern.tracks as track, trackIndex}
 				<div class="track" style="--track-color: {trackColors[trackIndex]}">
 					<div class="track-header">
@@ -77,28 +78,39 @@
 				</div>
 			{/each}
 		</div>
+		</div>
 	</div>
 {/if}
 
 <style>
+	.grid-wrapper {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
 	.grid-sequencer {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-		padding: 1rem;
+		gap: 1.5rem;
+		padding: 2rem;
 		background: #1a1a1a;
 		border-radius: 0.75rem;
+		width: auto;
+		max-width: 100%;
 	}
 
 	.tracks-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	.track {
 		display: flex;
-		gap: 1rem;
+		gap: 1.5rem;
 		align-items: center;
 	}
 
@@ -107,10 +119,11 @@
 		align-items: center;
 		gap: 0.5rem;
 		min-width: 120px;
+		width: 120px;
 	}
 
 	.track-name {
-		font-size: 0.875rem;
+		font-size: 1rem;
 		font-weight: 500;
 		color: #e5e5e5;
 		flex: 1;
@@ -123,16 +136,16 @@
 
 	.mute-btn,
 	.solo-btn {
-		width: 1.75rem;
-		height: 1.75rem;
+		width: 2rem;
+		height: 2rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: #2a2a2a;
 		border: 1px solid #3a3a3a;
-		border-radius: 0.25rem;
+		border-radius: 0.375rem;
 		color: #888;
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		font-weight: bold;
 		cursor: pointer;
 		transition: all 0.15s;
@@ -157,18 +170,20 @@
 	}
 
 	.steps {
-		display: flex;
-		gap: 0.25rem;
+		display: grid;
+		grid-template-columns: repeat(16, 1fr);
+		gap: 0.375rem;
 		flex: 1;
+		max-width: calc(16 * 4.5rem);
 	}
 
 	.step {
-		width: 2.5rem;
-		height: 2.5rem;
+		width: clamp(2.5rem, 4vw, 4rem);
+		height: clamp(2.5rem, 4vw, 4rem);
 		padding: 0.25rem;
 		background: #2a2a2a;
 		border: 1px solid #3a3a3a;
-		border-radius: 0.375rem;
+		border-radius: 0.5rem;
 		cursor: pointer;
 		transition: all 0.15s;
 		position: relative;
@@ -198,18 +213,20 @@
 	}
 
 	.step-numbers {
-		display: flex;
-		gap: 0.25rem;
-		margin-left: 136px;
+		display: grid;
+		grid-template-columns: repeat(16, 1fr);
+		gap: 0.375rem;
+		margin-left: calc(120px + 1.5rem);
+		max-width: calc(16 * 4.5rem);
 	}
 
 	.step-number {
-		width: 2.5rem;
-		height: 1.5rem;
+		width: clamp(2.5rem, 4vw, 4rem);
+		height: 2rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		color: #666;
 		transition: color 0.15s;
 	}

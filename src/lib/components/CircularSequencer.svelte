@@ -146,15 +146,17 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
-		max-width: 800px;
+		height: 100%;
+		padding: 1rem;
 	}
 
 	.circular-sequencer {
-		width: 500px;
-		height: 500px;
+		width: min(80vh, 80vw, 600px);
+		height: min(80vh, 80vw, 600px);
 		background: #1a1a1a;
 		border-radius: 50%;
 		border: 2px solid #2a2a2a;
+		flex-shrink: 0;
 	}
 
 	.step-circle {

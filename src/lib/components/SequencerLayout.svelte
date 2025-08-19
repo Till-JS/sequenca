@@ -115,14 +115,14 @@
 	.header {
 		background: #1a1a1a;
 		border-bottom: 1px solid #2a2a2a;
-		padding: 1rem 2rem;
+		padding: 0.75rem 1.5rem;
 	}
 
 	.header-top {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 		flex-wrap: wrap;
 		gap: 1rem;
 	}
@@ -134,7 +134,7 @@
 	}
 
 	.title {
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		font-weight: bold;
 		background: linear-gradient(135deg, var(--primary), var(--secondary));
 		-webkit-background-clip: text;
@@ -145,7 +145,7 @@
 	.controls {
 		display: flex;
 		align-items: center;
-		gap: 1.5rem;
+		gap: 1.25rem;
 		flex-wrap: wrap;
 	}
 
@@ -157,24 +157,33 @@
 
 	.main {
 		flex: 1;
-		padding: 2rem;
+		padding: 1rem;
 		display: flex;
 		justify-content: center;
-		align-items: flex-start;
-		overflow-y: auto;
+		align-items: center;
+		overflow: hidden;
+		width: 100%;
 	}
 
 	@media (max-width: 768px) {
 		.header {
-			padding: 1rem;
+			padding: 0.5rem;
+		}
+
+		.header-top {
+			margin-bottom: 0.5rem;
+		}
+
+		.title {
+			font-size: 1rem;
 		}
 
 		.controls {
-			gap: 1rem;
+			gap: 0.75rem;
 		}
 
 		.main {
-			padding: 1rem;
+			padding: 0.5rem;
 		}
 
 		.divider {
