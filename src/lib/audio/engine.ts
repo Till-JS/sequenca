@@ -5,26 +5,40 @@ import type { Pattern, Track, Step } from '$lib/types/sequencer';
 
 export class AudioEngine {
 	private drumKit: DrumKit;
-	private transport = Tone.getTransport();
+	private transport: any;
 	private currentStep = 0;
 	private isPlaying = false;
 	private pattern: Pattern | null = null;
 	private sequenceId: number | null = null;
 	private onStepCallback?: (step: number) => void;
+	private initialized = false;
 
 	constructor() {
 		this.drumKit = new DrumKit();
-		this.setupTransport();
+		// Only setup transport in browser
+		if (typeof window !== 'undefined') {
+			this.transport = Tone.getTransport();
+			this.setupTransport();
+		}
 	}
 
 	private setupTransport() {
+		if (!this.transport) return;
 		this.transport.bpm.value = AUDIO_CONSTANTS.DEFAULT_BPM;
 		this.transport.swing = AUDIO_CONSTANTS.DEFAULT_SWING;
 	}
 
 	async init() {
+		if (typeof window === 'undefined' || this.initialized) return;
+		
+		if (!this.transport) {
+			this.transport = Tone.getTransport();
+			this.setupTransport();
+		}
+		
 		await Tone.start();
 		await this.drumKit.load();
+		this.initialized = true;
 	}
 
 	setPattern(pattern: Pattern) {
@@ -33,6 +47,7 @@ export class AudioEngine {
 	}
 
 	setBPM(bpm: number) {
+		if (!this.transport) return;
 		this.transport.bpm.value = Math.max(
 			AUDIO_CONSTANTS.MIN_BPM,
 			Math.min(AUDIO_CONSTANTS.MAX_BPM, bpm)
@@ -40,6 +55,7 @@ export class AudioEngine {
 	}
 
 	setSwing(swing: number) {
+		if (!this.transport) return;
 		this.transport.swing = swing;
 	}
 
@@ -48,7 +64,7 @@ export class AudioEngine {
 	}
 
 	play() {
-		if (this.isPlaying || !this.pattern) return;
+		if (this.isPlaying || !this.pattern || !this.transport) return;
 
 		this.isPlaying = true;
 		this.currentStep = 0;
@@ -86,7 +102,7 @@ export class AudioEngine {
 	}
 
 	stop() {
-		if (!this.isPlaying) return;
+		if (!this.isPlaying || !this.transport) return;
 
 		this.isPlaying = false;
 		this.transport.stop();
@@ -102,18 +118,19 @@ export class AudioEngine {
 	}
 
 	pause() {
-		if (!this.isPlaying) return;
+		if (!this.isPlaying || !this.transport) return;
 		this.isPlaying = false;
 		this.transport.pause();
 	}
 
 	resume() {
-		if (this.isPlaying) return;
+		if (this.isPlaying || !this.transport) return;
 		this.isPlaying = true;
 		this.transport.start();
 	}
 
 	setMasterVolume(volume: number) {
+		if (typeof window === 'undefined') return;
 		Tone.getDestination().volume.value = Tone.gainToDb(volume);
 	}
 

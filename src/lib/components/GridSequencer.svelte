@@ -62,7 +62,7 @@
 								class:current={$currentStep === stepIndex && $isPlaying}
 								aria-label="Step {stepIndex + 1}"
 							>
-								<div class="step-indicator" />
+								<div class="step-indicator"></div>
 							</button>
 						{/each}
 					</div>
